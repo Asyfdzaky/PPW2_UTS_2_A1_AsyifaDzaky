@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 
-class Controller extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index() : View
     {
-        return view('index', [
+        return view('products.index', [
             'products' => Product::latest()->paginate(3)
         ]);
     }
@@ -33,8 +34,7 @@ class Controller extends Controller
     public function store(StoreProductRequest $request) : RedirectResponse
     {
         Product::create($request->all());
-        return redirect()->route('index')
-                ->withSuccess('New product is added successfully.');
+        return redirect()->route('products.index')->withSuccess('New product is added successfully.');
     }
 
     /**
@@ -43,7 +43,7 @@ class Controller extends Controller
     public function show(Product $product) : View
     {
         return view('products.show', [
-            'product' => $products
+            'product' => $product
         ]);
     }
 
@@ -70,7 +70,7 @@ class Controller extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product) : RedirectResponse
+    public function destroy($product) : RedirectResponse
     {
         $product->delete();
         return redirect()->route('index')
